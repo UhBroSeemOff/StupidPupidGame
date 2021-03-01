@@ -34,6 +34,7 @@ namespace MyStupidPupidGame.Character
         {
             Name = name;
             _qualification = qualification;
+
             Stats.Damage = _qualification.Strength;
             Stats.Defense = _qualification.Strength;
             Stats.Health = _qualification.Endurance;

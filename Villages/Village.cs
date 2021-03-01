@@ -26,7 +26,7 @@ namespace MyStupidPupidGame.Villages
                 _diceService.RollDice(EDices.Dice100).ToString(),
                 new Qualification() { 
                     Agility = _diceService.RollDice(EDices.Dice24), 
-                    Endurance = _diceService.RollDice(EDices.Dice24), 
+                    Endurance = _diceService.RollDice(EDices.Dice100), 
                     Strength = _diceService.RollDice(EDices.Dice24)});        //TODO: map quals
         }
     }
