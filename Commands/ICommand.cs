@@ -1,6 +1,4 @@
-﻿using MyStupidPupidGame.Character;
-
-namespace MyStupidPupidGame.Commands
+﻿namespace MyStupidPupidGame.Commands
 {
     public interface ICommand
     {

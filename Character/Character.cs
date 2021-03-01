@@ -2,8 +2,7 @@
 using MyStupidPupidGame.Commands.Battle;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using MyStupidPupidGame.Structures;
+using MyStupidPupidGame.CharacterProperties;
 
 namespace MyStupidPupidGame.Character
 {
@@ -23,7 +22,7 @@ namespace MyStupidPupidGame.Character
 
         public string Name { get; private set; }
 
-        public Statistic Stats { get; private set; }
+        public Statistic Stats { get; private set; } = new Statistic();
 
         public bool IsAlive { get; private set; } = true;
 
@@ -31,10 +30,13 @@ namespace MyStupidPupidGame.Character
 
         #region Constructors
 
-        protected Character( string name, Qualification qualification)
+        protected Character(string name, Qualification qualification)
         {
             Name = name;
             _qualification = qualification;
+            Stats.Damage = _qualification.Strength;
+            Stats.Defense = _qualification.Strength;
+            Stats.Health = _qualification.Endurance;
 
             Id = Guid.NewGuid();
 
@@ -64,22 +66,24 @@ namespace MyStupidPupidGame.Character
 
         public void Income(ICommand command)
         {
-            if (command is Attack atack)
-                HealthChanged?.Invoke(this, atack.Damage * (-1));
+            if (command is Attack attack)
+                HealthChanged?.Invoke(this, attack.Damage * (-1));
 
         }
 
         private void OnHealthChanged(object sender, int healthChanging)
         {
-            var health = Stats.Health + healthChanging;
-            Stats.Update(health, Stats.Damage, Stats.Defense);
+            if (!(sender is Character character))
+                return;
+
+            if (character.Id != Id)
+                return;
+
+            Stats.Health += healthChanging;
 
             IsAlive = Stats.Health > 0;
 
-            if (IsAlive)
-                Console.WriteLine($"Ouch! {Name} damaged, {Stats.Health} health remained!");
-            else
-                Console.WriteLine($"{Name} dead...");
+            Console.WriteLine(IsAlive ? $"Ouch! {Name} damaged, {Stats.Health} health remained!" : $"{Name} dead...");
         }
 
         #endregion

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MyStupidPupidGame.Services.DiceService.Dices
+﻿namespace MyStupidPupidGame.Services.DiceService.Dices
 {
     public class Dice6 : Dice
     {

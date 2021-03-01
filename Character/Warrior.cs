@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using MyStupidPupidGame.Structures;
+using MyStupidPupidGame.CharacterProperties;
 
 namespace MyStupidPupidGame.Character
 {
@@ -19,7 +19,7 @@ namespace MyStupidPupidGame.Character
         
         public override void FindTarget(IEnumerable<ICharacter> targetsList)
         {
-            _target = targetsList.OrderBy(target => target.Name).FirstOrDefault();
+            _target = targetsList.OrderBy(target => target.Name).FirstOrDefault(target=>target.IsAlive);
         }
 
         #endregion

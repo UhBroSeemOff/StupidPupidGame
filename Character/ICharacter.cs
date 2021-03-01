@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
 using MyStupidPupidGame.Commands;
-using MyStupidPupidGame.Structures;
 
 namespace MyStupidPupidGame.Character
 {
