@@ -1,2 +1,2 @@
 # StupidPupidGame
-Just my developments for casual rpg kn C#
+Just my developments for casual RPG kn C#
