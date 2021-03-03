@@ -15,8 +15,9 @@ namespace MyStupidPupidGame
         {
             IDiceService diceService = new DiceService();
             IRulesService rulesService = new RulesService(diceService);
-            IStrategyService strategyService = new StrategyService(rulesService.GetRules(ERules.Percentage));
-            IVillage village = new Village(diceService, strategyService);
+            var rules = rulesService.GetRules(ERules.Percentage);
+            IStrategyService strategyService = new StrategyService(rules);
+            IVillage village = new Village(diceService, strategyService, rules);
             IList<ICharacter> fighters = new List<ICharacter>();
 
             for (int i = 0; i < 200; i++)

@@ -34,15 +34,12 @@ namespace MyStupidPupidGame.Character
 
         #region Constructors
 
-        protected Character(string name, Qualification qualification, IStrategyService strategyService)
+        protected Character(string name, Qualification qualification, IStrategyService strategyService, IRules rules)
         {
             Name = name;
             _qualification = qualification;
             _strategyService = strategyService;
-
-            // ReSharper disable once VirtualMemberCallInConstructor
-            ComputeStats();
-
+            _stats = rules.GetStats(_qualification);
             Id = Guid.NewGuid();
 
             HealthChanged += OnHealthChanged;
@@ -69,6 +66,7 @@ namespace MyStupidPupidGame.Character
             if (!IsAlive)
                 return;
 
+            DisposeBonuses();
             MakeStrategyMove();
         }
 
@@ -79,14 +77,14 @@ namespace MyStupidPupidGame.Character
 
         public void Income(ICommand command)
         {
-            if (command is Attack attack)
-            {
-                if (TryAvoidDamage())
-                    return;
+            if (!(command is Attack attack)) 
+                return;
+
+            if (TryAvoidDamage())
+                return;
                 
-                var damage = TryReduceDamage(attack.Damage);
-                ApplyDamage(damage);
-            }
+            var damage = TryReduceDamage(attack.Damage);
+            ApplyDamage(damage);
         }
 
         private void OnHealthChanged(object sender, int healthChanging)
@@ -101,7 +99,13 @@ namespace MyStupidPupidGame.Character
         private void SetCondition()
         {
             var key = FindClosestEdge(_stats.Health);
-            Condition = _conditionMap[key];
+            var newCondition = _conditionMap[key];
+
+            if (Condition == newCondition)
+                return;
+
+            OnConditionChanged();
+            Condition = newCondition;
         }
 
         private int FindClosestEdge(int value)
@@ -119,7 +123,7 @@ namespace MyStupidPupidGame.Character
 
         private int TryReduceDamage(int damage)
         {
-            var result = damage - _stats.Defense;
+            var result = damage - _stats.Defense - _stats.BonusDefense;
             return result > 0 ? result : 0;
         }
 
@@ -128,9 +132,15 @@ namespace MyStupidPupidGame.Character
             HealthChanged?.Invoke(this, damage * (-1));
         }
 
-        protected abstract void ComputeStats();
-
         protected abstract void MakeStrategyMove();
+
+        protected void DisposeBonuses()
+        {
+            _stats.BonusDefense = 0;
+        }
+        protected virtual void OnConditionChanged()
+        {
+        }
 
         #endregion
     }

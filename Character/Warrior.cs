@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using MyStupidPupidGame.Character.CharacterProperties;
+﻿using MyStupidPupidGame.Character.CharacterProperties;
 using MyStupidPupidGame.Enums;
 using MyStupidPupidGame.Services.RulesService.Rules;
 using MyStupidPupidGame.Services.StrategyService;
@@ -9,11 +8,19 @@ namespace MyStupidPupidGame.Character
 {
     public class Warrior : Character
     {
+        #region Fields
+
+        private IStrategy _currentStrategy; 
+
+        #endregion
+
 
         #region Constructors
 
-        public Warrior(string name, Qualification qualification, IStrategyService strategyService) : base(name, qualification, strategyService)
+        public Warrior(string name, Qualification qualification, IStrategyService strategyService, IRules rules) : 
+            base(name, qualification, strategyService, rules)
         {
+            _currentStrategy = _strategyService.GetStrategy(EStrategies.Aggressive);
         }
 
         #endregion
@@ -22,17 +29,13 @@ namespace MyStupidPupidGame.Character
 
         protected override void MakeStrategyMove()
         {
-            var strategy = _strategyService.GetStrategy(EStrategies.Aggressive);
-            strategy.MakeMove(_enemiesList, _stats);
+            _currentStrategy.MakeMove(_enemiesList, _stats);
+            _currentStrategy = _strategyService.GetStrategy(EStrategies.Aggressive);
         }
 
-        protected override void ComputeStats()
+        protected override void OnConditionChanged()
         {
-            _stats.Penetration = 40;
-            _stats.Damage = _qualification.Strength/5;
-            _stats.Defense = _qualification.Strength /10;
-            _stats.Health = _qualification.Endurance;
-            _stats.Evasion = 10;
+            _currentStrategy = _strategyService.GetStrategy(EStrategies.Defensive);
         }
 
         #endregion

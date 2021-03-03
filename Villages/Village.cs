@@ -15,15 +15,15 @@ namespace MyStupidPupidGame.Villages
         private readonly IStrategyService _strategyService;
         private readonly IDictionary<EFighterClass, Func<string, Qualification, ICharacter>> _charactersMap;
 
-        public Village(IDiceService diceService, IStrategyService strategyService)
+        public Village(IDiceService diceService, IStrategyService strategyService, IRules rules)
         {
             _diceService = diceService;
             _strategyService = strategyService;
 
             _charactersMap = new Dictionary<EFighterClass, Func<string, Qualification, ICharacter>>
             {
-                {EFighterClass.Warrior, (name, qualification) => new Warrior(name, qualification, _strategyService)},
-                {EFighterClass.Ranger, (name, qualification) => new Archer(name, qualification, _strategyService)},
+                {EFighterClass.Warrior, (name, qualification) => new Warrior(name, qualification, _strategyService, rules)},
+                {EFighterClass.Ranger, (name, qualification) => new Archer(name, qualification, _strategyService, rules)},
             };
         }
 

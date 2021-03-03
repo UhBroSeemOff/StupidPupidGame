@@ -2,6 +2,7 @@
 {
     public enum EStrategies
     {
-        Aggressive
+        Aggressive,
+        Defensive
     }
 }

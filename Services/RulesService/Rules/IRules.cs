@@ -1,4 +1,5 @@
-﻿using MyStupidPupidGame.Enums;
+﻿using MyStupidPupidGame.Character.CharacterProperties;
+using MyStupidPupidGame.Enums;
 
 namespace MyStupidPupidGame.Services.RulesService.Rules
 {
@@ -9,5 +10,7 @@ namespace MyStupidPupidGame.Services.RulesService.Rules
         CheckResult Check(int stat, EDices dice, int diceNumber);
         int ComputeDamage(int stat);
         int ComputeDamage(int stat, int attacksNumber);
+        int ComputeDefense(int stat);
+        Statistic GetStats(Qualification qualification);
     }
 }

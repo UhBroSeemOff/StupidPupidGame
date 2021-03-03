@@ -1,4 +1,6 @@
-﻿using MyStupidPupidGame.Enums;
+﻿using System.Security.Authentication;
+using MyStupidPupidGame.Character.CharacterProperties;
+using MyStupidPupidGame.Enums;
 using MyStupidPupidGame.Services.DiceService;
 
 namespace MyStupidPupidGame.Services.RulesService.Rules
@@ -42,6 +44,32 @@ namespace MyStupidPupidGame.Services.RulesService.Rules
                 result += ComputeDamage(stat);
 
             return result;
+        }
+
+        public override int ComputeDefense(int stat)
+        {
+            var numberOfRolls = stat / 10;
+            var rollResult = _diceService.RollDice(EDices.Dice10, numberOfRolls);
+            return rollResult / 10;
+        }
+
+        public override Statistic GetStats(Qualification qualification)
+        {
+            return new Statistic
+            {
+                Health = ComputeOneStat(qualification.Endurance),
+                Damage = ComputeOneStat(qualification.Strength) / 10,
+                Defense = ComputeOneStat(qualification.Strength) /10,
+                Evasion = ComputeOneStat(qualification.Agility),
+                Penetration = ComputeOneStat(qualification.Agility)
+            };
+        }
+
+        private int ComputeOneStat(int value)
+        {
+            var rollsNumber = value / 10;
+            var rollResult = _diceService.RollDice(EDices.Dice100, rollsNumber);
+            return rollResult / rollsNumber + rollsNumber;
         }
     }
 }

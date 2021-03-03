@@ -13,7 +13,8 @@ namespace MyStupidPupidGame.Services.StrategyService
         {
             _strategiesMap = new Dictionary<EStrategies, IStrategy>
             {
-                {EStrategies.Aggressive, new AggressiveStrategy(rules)}
+                {EStrategies.Aggressive, new AggressiveStrategy(rules)},
+                {EStrategies.Defensive, new DefensiveStrategy(rules)},
             };
         }
 

@@ -7,5 +7,6 @@
         public int Penetration { get; set; }
         public int Defense { get; set; }
         public int Evasion { get; set; }
+        public int BonusDefense { get; set; }
     }
 }
