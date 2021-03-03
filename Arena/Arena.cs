@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 
 namespace MyStupidPupidGame.Arena
 {
@@ -31,18 +30,19 @@ namespace MyStupidPupidGame.Arena
             var fightersList = FightersList.ToList();
             fightersList.OrderBy(fighter=> fighter.Name).ToList().ForEach(fighter=> Console.WriteLine(fighter.Name));
 
+            fightersList.ForEach(fighter=>fighter.LookAround(fightersList));
+
             while(FightersList.Count(fighter => fighter.IsAlive) > 1)
             {
-                fightersList.ForEach(fighter =>
-                {
-                    fighter.FindTarget(fightersList.Where(character => character.Id != fighter.Id));
-                    fighter.Attack();
-                });
-
-                Thread.Sleep(1500);
+                fightersList.ForEach(fighter => fighter.Attack());
+                Console.WriteLine("===============================");
+                Console.WriteLine("-------------------------------");
+                fightersList.Where(fighter=> fighter.IsAlive).ToList().ForEach(fighter=> Console.WriteLine($"{fighter.Name} - {fighter.Condition}"));
+                Console.WriteLine("-------------------------------");
+                Console.WriteLine($"It's {fightersList.Count(fighter=>fighter.IsAlive)} warriors last");
             }
 
-            Console.WriteLine($"{fightersList.FirstOrDefault()?.Name} wins!");
+            Console.WriteLine($"{fightersList.FirstOrDefault(fighter => fighter.IsAlive)?.Name} wins!");
         }
 
         #endregion

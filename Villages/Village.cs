@@ -4,30 +4,37 @@ using MyStupidPupidGame.Character;
 using MyStupidPupidGame.CharacterProperties;
 using MyStupidPupidGame.Enums;
 using MyStupidPupidGame.Services.DiceService;
+using MyStupidPupidGame.Services.RulesService.Rules;
 
 namespace MyStupidPupidGame.Villages
 {
     public class Village : IVillage
     {
         private readonly IDiceService _diceService;
-        private readonly IDictionary<EFighterClass, Func<string, Qualification, ICharacter>> _charactersMap = new Dictionary<EFighterClass, Func<string, Qualification, ICharacter>>()
-        {
-            {EFighterClass.Warrior, (string name, Qualification qualification)=> new Warrior(name, qualification)}
-        };
+        private readonly IRules _rules;
+        private readonly IDictionary<EFighterClass, Func<string, Qualification, ICharacter>> _charactersMap;
 
-        public Village(IDiceService diceService)
+        public Village(IDiceService diceService, IRules rules)
         {
             _diceService = diceService;
+            _rules = rules;
+
+            _charactersMap = new Dictionary<EFighterClass, Func<string, Qualification, ICharacter>>
+            {
+                {EFighterClass.Warrior, (name, qualification) => new Warrior(name, qualification, _rules)},
+                {EFighterClass.Ranger, (name, qualification) => new Warrior(name, qualification, _rules)},
+            };
         }
 
         public ICharacter GetFighter(EFighterClass fighterClass)
         {
             return _charactersMap[fighterClass](
-                _diceService.RollDice(EDices.Dice100).ToString(),
+                $"{fighterClass}_{_diceService.RollDice(EDices.Dice100)}",
                 new Qualification() { 
-                    Agility = _diceService.RollDice(EDices.Dice24), 
-                    Endurance = _diceService.RollDice(EDices.Dice100), 
-                    Strength = _diceService.RollDice(EDices.Dice24)});        //TODO: map quals
+                    Agility = 30 + _diceService.RollDice(EDices.Dice10, 2), 
+                    Endurance = 30 + _diceService.RollDice(EDices.Dice20, 2),
+                    Strength = 30 + _diceService.RollDice(EDices.Dice10, 2)
+                });        //TODO: map quals
         }
     }
 }

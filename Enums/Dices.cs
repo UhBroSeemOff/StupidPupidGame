@@ -1,4 +1,4 @@
-﻿namespace MyStupidPupidGame.Services.DiceService
+﻿namespace MyStupidPupidGame.Enums
 {
     public enum EDices
     {
@@ -8,7 +8,7 @@
         Dice8,
         Dice10,
         Dice12,
-        Dice24,
+        Dice20,
         Dice100,
     }
 }
