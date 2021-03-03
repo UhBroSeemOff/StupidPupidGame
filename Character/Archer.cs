@@ -1,21 +1,21 @@
-﻿using System.Linq;
-using MyStupidPupidGame.CharacterProperties;
-using MyStupidPupidGame.Services.RulesService.Rules;
+﻿using MyStupidPupidGame.Character.CharacterProperties;
+using MyStupidPupidGame.Enums;
+using MyStupidPupidGame.Services.StrategyService;
 
 namespace MyStupidPupidGame.Character
 {
     class Archer : Character
     {
-        public Archer(string name, Qualification qualification, IRules rules) : base(name, qualification, rules)
+        public Archer(string name, Qualification qualification, IStrategyService strategyService) : base(name, qualification, strategyService)
         {
-            
             _stats.Damage -= 6;
             _stats.Health -= 10;
         }
 
-        protected override void FindTarget()
+        protected override void MakeStrategyMove()
         {
-            _target = _enemiesList.OrderByDescending(target => target.Condition).FirstOrDefault(target => target.IsAlive);
+            var strategy = _strategyService.GetStrategy(EStrategies.Aggressive);
+            strategy.MakeMove(_enemiesList, _stats);
         }
 
         protected override void ComputeStats()

@@ -1,6 +1,9 @@
 ﻿using System.Linq;
-using MyStupidPupidGame.CharacterProperties;
+using MyStupidPupidGame.Character.CharacterProperties;
+using MyStupidPupidGame.Enums;
 using MyStupidPupidGame.Services.RulesService.Rules;
+using MyStupidPupidGame.Services.StrategyService;
+using MyStupidPupidGame.Services.StrategyService.Strategies;
 
 namespace MyStupidPupidGame.Character
 {
@@ -9,17 +12,18 @@ namespace MyStupidPupidGame.Character
 
         #region Constructors
 
-        public Warrior(string name, Qualification qualification, IRules rules) : base(name, qualification, rules)
+        public Warrior(string name, Qualification qualification, IStrategyService strategyService) : base(name, qualification, strategyService)
         {
         }
 
         #endregion
 
         #region Methods
-        
-        protected override void FindTarget()
+
+        protected override void MakeStrategyMove()
         {
-            _target = _enemiesList.OrderBy(target=> target.Condition).FirstOrDefault(target=>target.IsAlive);
+            var strategy = _strategyService.GetStrategy(EStrategies.Aggressive);
+            strategy.MakeMove(_enemiesList, _stats);
         }
 
         protected override void ComputeStats()

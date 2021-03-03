@@ -3,21 +3,21 @@ using MyStupidPupidGame.Commands.Battle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MyStupidPupidGame.CharacterProperties;
+using MyStupidPupidGame.Character.CharacterProperties;
 using MyStupidPupidGame.Enums;
 using MyStupidPupidGame.Services.RulesService.Rules;
+using MyStupidPupidGame.Services.StrategyService;
 
 namespace MyStupidPupidGame.Character
 {
     public abstract class Character : ICharacter
     {
         #region Fields
-        protected ICharacter _target;
+        protected readonly IStrategyService _strategyService;
         protected Qualification _qualification;
         protected Statistic _stats = new Statistic();
         protected event EventHandler<int> HealthChanged;
         protected IEnumerable<ICharacter> _enemiesList;
-        protected IRules _rules;
         private readonly IDictionary<int, EWounds> _conditionMap;
         #endregion
 
@@ -34,11 +34,11 @@ namespace MyStupidPupidGame.Character
 
         #region Constructors
 
-        protected Character(string name, Qualification qualification, IRules rules)
+        protected Character(string name, Qualification qualification, IStrategyService strategyService)
         {
             Name = name;
             _qualification = qualification;
-            _rules = rules;
+            _strategyService = strategyService;
 
             // ReSharper disable once VirtualMemberCallInConstructor
             ComputeStats();
@@ -64,28 +64,13 @@ namespace MyStupidPupidGame.Character
 
         #region Methods
 
-        public void Attack()
-        {
-            FindTarget();
-
-            if (_target == null || !IsAlive)
-                return;
-
-            var checkResults = _rules.Check(_stats.Penetration);
-
-            if (!checkResults.IsPassed)
-                return;
-
-            var attackCommand = new Attack(_target, _rules.ComputeDamage(_stats.Damage));
-            attackCommand.Execute();
-        }
-
         public void Move()
         {
-            Console.WriteLine($"{GetType()} moves!");
-        }
+            if (!IsAlive)
+                return;
 
-        protected abstract void FindTarget();
+            MakeStrategyMove();
+        }
 
         public void LookAround(IEnumerable<ICharacter> targetsList)
         {
@@ -128,8 +113,8 @@ namespace MyStupidPupidGame.Character
 
         private bool TryAvoidDamage()
         {
-            var checkResults = _rules.Check(_stats.Evasion);
-            return checkResults.IsPassed;
+            // TODO: make evasion
+            return false;
         }
 
         private int TryReduceDamage(int damage)
@@ -144,6 +129,8 @@ namespace MyStupidPupidGame.Character
         }
 
         protected abstract void ComputeStats();
+
+        protected abstract void MakeStrategyMove();
 
         #endregion
     }

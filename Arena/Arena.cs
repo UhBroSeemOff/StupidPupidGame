@@ -34,7 +34,7 @@ namespace MyStupidPupidGame.Arena
 
             while(FightersList.Count(fighter => fighter.IsAlive) > 1)
             {
-                fightersList.ForEach(fighter => fighter.Attack());
+                fightersList.ForEach(fighter => fighter.Move());
                 Console.WriteLine("===============================");
                 Console.WriteLine("-------------------------------");
                 fightersList.Where(fighter=> fighter.IsAlive).ToList().ForEach(fighter=> Console.WriteLine($"{fighter.Name} - {fighter.Condition}"));

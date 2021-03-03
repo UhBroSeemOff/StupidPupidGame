@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MyStupidPupidGame.Enums;
 using MyStupidPupidGame.Services.DiceService;
 using MyStupidPupidGame.Services.RulesService;
+using MyStupidPupidGame.Services.StrategyService;
 using MyStupidPupidGame.Villages;
 
 namespace MyStupidPupidGame
@@ -14,7 +15,8 @@ namespace MyStupidPupidGame
         {
             IDiceService diceService = new DiceService();
             IRulesService rulesService = new RulesService(diceService);
-            IVillage village = new Village(diceService, rulesService.GetRules(ERules.Percentage));
+            IStrategyService strategyService = new StrategyService(rulesService.GetRules(ERules.Percentage));
+            IVillage village = new Village(diceService, strategyService);
             IList<ICharacter> fighters = new List<ICharacter>();
 
             for (int i = 0; i < 200; i++)

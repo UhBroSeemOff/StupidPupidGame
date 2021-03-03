@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using MyStupidPupidGame.Character;
-using MyStupidPupidGame.CharacterProperties;
+using MyStupidPupidGame.Character.CharacterProperties;
 using MyStupidPupidGame.Enums;
 using MyStupidPupidGame.Services.DiceService;
 using MyStupidPupidGame.Services.RulesService.Rules;
+using MyStupidPupidGame.Services.StrategyService;
 
 namespace MyStupidPupidGame.Villages
 {
     public class Village : IVillage
     {
         private readonly IDiceService _diceService;
-        private readonly IRules _rules;
+        private readonly IStrategyService _strategyService;
         private readonly IDictionary<EFighterClass, Func<string, Qualification, ICharacter>> _charactersMap;
 
-        public Village(IDiceService diceService, IRules rules)
+        public Village(IDiceService diceService, IStrategyService strategyService)
         {
             _diceService = diceService;
-            _rules = rules;
+            _strategyService = strategyService;
 
             _charactersMap = new Dictionary<EFighterClass, Func<string, Qualification, ICharacter>>
             {
-                {EFighterClass.Warrior, (name, qualification) => new Warrior(name, qualification, _rules)},
-                {EFighterClass.Ranger, (name, qualification) => new Warrior(name, qualification, _rules)},
+                {EFighterClass.Warrior, (name, qualification) => new Warrior(name, qualification, _strategyService)},
+                {EFighterClass.Ranger, (name, qualification) => new Archer(name, qualification, _strategyService)},
             };
         }
 

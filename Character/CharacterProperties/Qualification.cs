@@ -1,4 +1,4 @@
-﻿namespace MyStupidPupidGame.CharacterProperties
+﻿namespace MyStupidPupidGame.Character.CharacterProperties
 {
     public class Qualification
     {

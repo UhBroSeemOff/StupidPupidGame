@@ -12,9 +12,8 @@ namespace MyStupidPupidGame.Character
         public bool IsAlive { get; }
         public EWounds Condition { get; }
 
-        public void Move();
-        public void Attack();
         public void LookAround(IEnumerable<ICharacter> targetsList);
+        public void Move();
         public void Income(ICommand command);
     }
 }
